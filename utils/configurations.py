@@ -17,3 +17,4 @@ class Configurations:
         self.size_img = parameters_dict["size_img"]
         self.scale_factor = parameters_dict["scale_factor"]
         self.dir_write = parameters_dict["dir_write"]
+        self.thold_tbud = parameters_dict["thold_tbud"]
