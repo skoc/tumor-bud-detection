@@ -153,7 +153,7 @@ def train_model(X, y, configurations):
     # Write model history to the file
     pd.DataFrame(results.history).to_csv(dir_write + "history_" + model_name + ".csv")
     
-    return results
+    return model, results
 
 def save_model(model, configurations):
 
@@ -179,8 +179,8 @@ def main():
     print(''.join("%s:\t%s\n" % item for item in vars(configurations).items()))
     
     # Name model with configuration parameters
-    # naming_parameter = '_'.join(list([key + "-" + str(val) for key,val in parameters_dict.items()])[1:]) 
-    # parameters_dict['model_name'] = naming_parameter
+    naming_config = '_'.join(list([key + "-" + str(val) for key,val in configurations.items()])[1:]) 
+    configurations['model_name'] = naming_config
     
     os.environ["CUDA_VISIBLE_DEVICES"] = configurations.gpu_no
 
@@ -188,8 +188,10 @@ def main():
     X_train, y_train= get_data(configurations)
 
     # Training
-    models = train_model(X=X_train, y=y_train, configurations=configurations)
+    model, history = train_model(X=X_train, y=y_train, configurations=configurations)
 
+    # Save Model
+    save_model(model, configurations)
     # Testing
     # pred  = models['NN'].predict(models['Encoder'].predict(X_test))
     # auc_score = roc_auc_score(y_test.response, np.squeeze(pred))
