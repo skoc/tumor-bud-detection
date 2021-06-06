@@ -66,10 +66,15 @@ def generate_visuals(dir_img, dir_pred, img_count=1, clean=True, thold_iou=0.5, 
         sample_img = os.path.join(dir_img, 'img', file)
         file_name = ('-'.join(file.split('-')[1:])).split('.')[0]
         
-        print(file)
+        # print(file)
         sample_ann = os.path.join(dir_img, 'ann', 'ann-'+file_name+'.jpg')
+        print(sample_ann)
+
         sample_pred = os.path.join(dir_pred, 'pred-'+file)
+        print(sample_ann)
+
         sample_mask = os.path.join(dir_img, 'mask', 'bw-'+file_name+'.png')
+        print(sample_mask)
         
         if not os.path.exists(sample_ann): continue
         fig, axes = plt.subplots(1, 4, figsize=(72, 72))
