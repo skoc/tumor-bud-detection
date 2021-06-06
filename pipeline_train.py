@@ -72,7 +72,7 @@ def get_data(configurations):
 
     print(f'[DEBUG][get_data] Number of Image Tiles: {len(files_orj)}\t Number of Image Masks: {len(files_mask)}\n')
 
-    train_cpt_filtered = 0
+    train_cpt_filtered = 1
     for i, f in enumerate(files_orj):
         # Apply Bud Threshold 
         if not filter_tbud_count(path_bud_info, f, configurations.thold_tbud):
