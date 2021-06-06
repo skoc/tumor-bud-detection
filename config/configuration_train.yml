@@ -3,8 +3,9 @@ batch_size: 16
 epoch: 100
 model_no: 1
 gpu_no: '0'
-model_name: 'test'
+model_name: 'unetbasic'
 learning_rate: 0.001
 size_img: 512
 scale_factor: 1
 dir_write: 'outputs/training'
+thold_tbud: 3
