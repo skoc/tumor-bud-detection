@@ -72,29 +72,33 @@ def get_data(configurations):
 
     print(f'[DEBUG][get_data] Number of Image Tiles: {len(files_orj)}\t Number of Image Masks: {len(files_mask)}\n')
 
-    train_cpt_filtered = 1
+    train_cpt_filtered = 0
+    files_orj_filtered = []
+    files_mask_filtered = []
+
     for i, f in enumerate(files_orj):
         # Apply Bud Threshold 
-        if not filter_tbud_count(path_bud_info, f, configurations.thold_tbud):
-            continue
-        train_cpt_filtered += 1
+        if filter_tbud_count(path_bud_info, f, configurations.thold_tbud):
+            train_cpt_filtered += 1
+            files_orj_filtered.append(files_orj[i])
+            files_mask_filtered.append(files_mask[i])
         
     X_train = np.ndarray((train_cpt_filtered, IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS), dtype=np.float32)
     Y_train = np.ndarray((train_cpt_filtered, IMG_HEIGHT, IMG_WIDTH, 1), dtype=np.float32)  # dtype=np.bool)
 
-    for i, f in enumerate(files_orj):
-        # Apply Bud Threshold 
-        if not filter_tbud_count(path_bud_info, f, configurations.thold_tbud):
-            continue
+    for i, f in enumerate(files_orj_filtered):
+        # # Apply Bud Threshold 
+        # if not filter_tbud_count(path_bud_info, f, configurations.thold_tbud):
+        #     continue
         img = cv2.imread(path + f)
         img = cv2.resize(img, (IMG_HEIGHT, IMG_WIDTH), interpolation=cv2.INTER_AREA)
         img = img / 255
         X_train[i] = img
 
-    for i, fm in enumerate(files_mask):
-        # Apply Bud Threshold 
-        if not filter_tbud_count(path_bud_info, fm, configurations.thold_tbud):
-            continue
+    for i, fm in enumerate(files_mask_filtered):
+        # # Apply Bud Threshold 
+        # if not filter_tbud_count(path_bud_info, fm, configurations.thold_tbud):
+        #     continue
         img_mask = cv2.imread(path_mask + fm, cv2.IMREAD_GRAYSCALE)
         img_mask = cv2.resize(img_mask, (IMG_HEIGHT, IMG_WIDTH), interpolation=cv2.INTER_AREA)
         img_mask = img_mask / 255
