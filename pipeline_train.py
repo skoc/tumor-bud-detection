@@ -77,7 +77,7 @@ def get_data(configurations):
 
     for i, f in enumerate(files_orj):
         # Apply Bud Threshold 
-        if filter_tbud_count(path_bud_info, f, configurations.thold_tbud) == 0:
+        if not filter_tbud_count(path_bud_info, f, configurations.thold_tbud):
             continue
         img = cv2.imread(path + f)
         img = cv2.resize(img, (IMG_HEIGHT, IMG_WIDTH), interpolation=cv2.INTER_AREA)
@@ -86,7 +86,7 @@ def get_data(configurations):
 
     for i, fm in enumerate(files_mask):
         # Apply Bud Threshold 
-        if filter_tbud_count(path_bud_info, fm, configurations.thold_tbud) == 0:
+        if not filter_tbud_count(path_bud_info, fm, configurations.thold_tbud):
             continue
         img_mask = cv2.imread(path_mask + fm, cv2.IMREAD_GRAYSCALE)
         img_mask = cv2.resize(img_mask, (IMG_HEIGHT, IMG_WIDTH), interpolation=cv2.INTER_AREA)

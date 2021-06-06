@@ -18,9 +18,10 @@ def filter_tbud_count(path_bud_info, img_file, thold=3):
     
     if files_filtered:
         buds = int(files_filtered[0][1][1:])
-        print(files_filtered)
+        if buds >= thold:
+            print(files_filtered)
     # return: [('1296-10-81-b2-budInfo.txt', 'b2')]
-    return buds
+    return buds >= thold
 
 def read_image(file, configurations, mask=False):
 
