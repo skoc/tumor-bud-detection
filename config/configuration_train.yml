@@ -7,4 +7,4 @@ model_name: 'test'
 learning_rate: 0.001
 size_img: 512
 scale_factor: 1
-dir_write: 'Outputs/Training'
+dir_write: 'outputs/training'

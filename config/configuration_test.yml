@@ -2,5 +2,5 @@ data_folder: '/sbgenomics/project-files/DATASET_BUD/test/'
 model_name: 'test'
 sample_count: 10
 size_img: 512
-output_folder: '.'
+output_folder: 'output/testing'
 trained_model: 'trained_models/batch_size-16_epoch-100_model_no-1_cuda_no-0_model_name-test_learning_rate-0.001_size_img-512_scale_factor-1_main_modelCheckpoint.h5'
