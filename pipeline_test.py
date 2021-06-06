@@ -3,11 +3,18 @@ import sys
 import os
 import cv2
 import time
+import random as rd
 
 from tensorflow.keras.models import load_model
 from tensorflow.keras import backend as K
 from tensorflow.keras.preprocessing import image
 import matplotlib.pyplot as plt
+
+# Set seed value for all of frameworks
+seed_value= 2021 
+os.environ['PYTHONHASHSEED']=str(seed_value)
+rd.seed(seed_value)
+np.random.seed(seed_value)
 
 # os.chdir('/Users/sonerkoc/Git_repos/tumor-bud-detection')
 
