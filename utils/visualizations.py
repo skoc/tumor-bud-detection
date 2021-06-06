@@ -82,8 +82,8 @@ def generate_visuals(dir_img, dir_pred, img_count=1, clean=True, thold_iou=0.5, 
         overlap_img = mapper_image(img_ann=read_image(sample_ann, img_size=img_size), img_pred=read_image(sample_pred, img_size=img_size, mask=True),\
                                   fname="overlap-"+file, output_dir='.', clean=clean)
 
-        iou_scores = write_iou_per_bud(overlap_img, read_image(sample_mask, img_size=img_size, mask=True), read_image(sample_pred, img_size=img_size, mask=True), thold_area=100)
-        print(f"Score: {sum([i > thold_iou for i in iou_scores])/len(iou_scores)}")
+        # iou_scores = write_iou_per_bud(overlap_img, read_image(sample_mask, img_size=img_size, mask=True), read_image(sample_pred, img_size=img_size, mask=True), thold_area=100)
+        # print(f"Score: {sum([i > thold_iou for i in iou_scores])/len(iou_scores)}")
 
         # select only masked area below
         # masked = input_img.copy()
