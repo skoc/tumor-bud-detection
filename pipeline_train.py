@@ -126,6 +126,7 @@ def train_model(X, y, configurations):
     model_name = configurations.model_name
     dir_write = configurations.dir_write
     epochs = configurations.epoch
+    dropout_ratio = configurations.dropout_ratio
 
     # Free up RAM in case the model definition cells were run multiple times
     K.clear_session()
@@ -133,7 +134,7 @@ def train_model(X, y, configurations):
     # earlystopper = EarlyStopping(monitor='val_loss', patience=100, verbose=1)
     
     # Initialize the model
-    model = unetModel_residual(IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS, lr_rate=lr_rate)
+    model = unetModel_residual(IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS, dropout_ratio=dropout_ratio, lr_rate=lr_rate)
 
     # Save the model after every epoch
     checkpointer = ModelCheckpoint(model_name + '_main_modelCheckpoint.h5', verbose=0, monitor='val_loss', \

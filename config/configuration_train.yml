@@ -9,4 +9,5 @@ learning_rate: 0.001
 size_img: 512
 scale_factor: 1
 thold_tbud: 3
+dropout_ratio: 0.5
 dir_write: 'outputs/training'

@@ -20,6 +20,7 @@ class Configurations:
             self.scale_factor = parameters_dict["scale_factor"]
             self.dir_write = parameters_dict["dir_write"]
             self.thold_tbud = parameters_dict["thold_tbud"]
+            self.dropout_ratio = parameters_dict["dropout_ratio"]
         
         elif parameters_dict["conf_type"] == 'test':
 
