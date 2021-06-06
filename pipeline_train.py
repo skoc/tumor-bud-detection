@@ -61,9 +61,6 @@ def get_data(configurations):
 
     # Get and resize train images and masks
     train_cpt = int(sum([len(files) for r, d, files in os.walk(TRAIN_PATH + "img/")]))
-    
-    X_train = np.ndarray((train_cpt, IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS), dtype=np.float32)
-    Y_train = np.ndarray((train_cpt, IMG_HEIGHT, IMG_WIDTH, 1), dtype=np.float32)  # dtype=np.bool)
 
     print(f'[DEBUG][get_data] Getting and Resizing Train Images and Masks Done!\nPath to img: {path}')
     sys.stdout.flush()
@@ -74,6 +71,16 @@ def get_data(configurations):
     files_mask = sorted(files_mask)
 
     print(f'[DEBUG][get_data] Number of Image Tiles: {len(files_orj)}\t Number of Image Masks: {len(files_mask)}\n')
+
+    train_cpt_filtered = 0
+    for i, f in enumerate(files_orj):
+        # Apply Bud Threshold 
+        if not filter_tbud_count(path_bud_info, f, configurations.thold_tbud):
+            continue
+        train_cpt_filtered += 1
+        
+    X_train = np.ndarray((train_cpt_filtered, IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS), dtype=np.float32)
+    Y_train = np.ndarray((train_cpt_filtered, IMG_HEIGHT, IMG_WIDTH, 1), dtype=np.float32)  # dtype=np.bool)
 
     for i, f in enumerate(files_orj):
         # Apply Bud Threshold 
