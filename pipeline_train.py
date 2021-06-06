@@ -108,7 +108,7 @@ def get_data(configurations):
     print(f'[DEBUG][get_data] After Filter thold_tbud:{configurations.thold_tbud} Number of Image Tiles: {len(X_train)}\t Number of Image Masks: {len(Y_train)}\n')
 
     print(f"[DEBUG][INFO] Data Matrix: {round(X_train.nbytes / (1024 * 1000.0),3)} MB\n")
-    pixels = Y_train.flatten().reshape(train_cpt, IMG_HEIGHT*IMG_WIDTH)
+    pixels = Y_train.flatten().reshape(train_cpt_filtered, IMG_HEIGHT*IMG_WIDTH)
     weights_train = pixels.copy()
     pixels = np.expand_dims(pixels, axis = -1)
     print(f"Data Read is Done!")
