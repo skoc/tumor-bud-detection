@@ -55,6 +55,7 @@ def generate_visuals(dir_img, dir_pred, img_count=1, clean=True, thold_iou=0.5, 
 
     # select 0.1 of the files randomly 
     random_files = np.random.choice(files, img_count)
+    random_files = files
     
     # Write Generated Visualization
     dir_write = 'visualization'
