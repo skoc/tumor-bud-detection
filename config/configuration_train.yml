@@ -1,12 +1,12 @@
 data_folder: '/sbgenomics/project-files/DATASET_BUD/'
-model_name: 'unetbase-residual-1024'
+model_name: 'unetbase-residual-512'
 conf_type: 'train'
 batch_size: 4
 epoch: 100
 model_no: 1
 gpu_no: '0'
 learning_rate: 0.0001
-size_img: 1024
+size_img: 512
 scale_factor: 1
 thold_tbud: 3
 dir_write: 'outputs/training'
