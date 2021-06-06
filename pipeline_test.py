@@ -136,7 +136,7 @@ def main():
     predictions = test_model(X_test, configurations)
 
     for i in range(5):
-        generate_visuals(configurations.data_folder, 'Prediction/')
+        generate_visuals(configurations.data_folder, os.path.join(configurations.output_folder, 'Prediction/'))
     time.sleep(3)
 
 if __name__ == "__main__":
