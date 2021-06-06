@@ -49,6 +49,7 @@ def get_data(configurations):
     
     IMG_WIDTH = configurations.size_img
     IMG_HEIGHT = configurations.size_img
+    IMG_CHANNELS = 3
     TRAIN_PATH = configurations.data_folder
     IMG_CHANNELS = 3
     
@@ -80,6 +81,7 @@ def get_data(configurations):
         if filter_tbud_count(path_bud_info, f, configurations.thold_tbud) == 0:
             continue
         img = cv2.imread(path + f)
+        print(path+f)
         img = cv2.resize(img, (IMG_HEIGHT, IMG_WIDTH), interpolation=cv2.INTER_AREA)
         img = img / 255
         X_train[i] = img

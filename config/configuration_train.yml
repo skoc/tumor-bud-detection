@@ -3,7 +3,7 @@ batch_size: 16
 epoch: 100
 model_no: 1
 gpu_no: '0'
-model_name: 'unetbasic'
+model_name: 'unetbase'
 learning_rate: 0.001
 size_img: 512
 scale_factor: 1
