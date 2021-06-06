@@ -22,6 +22,7 @@ from utils.loss_functions import dice_coef_loss
 from utils.data_generator import data_generator
 from models.unet_models import unetModel_basic_4
 from utils.configurations import Configurations
+from utils.utils import filter_tbud_count
 
 # Set seed value for all of frameworks
 seed_value= 2021 
@@ -49,10 +50,12 @@ def get_data(configurations):
     IMG_WIDTH = configurations.size_img
     IMG_HEIGHT = configurations.size_img
     TRAIN_PATH = configurations.data_folder
+    IMG_CHANNELS = 3
     
     # Path of Image Tiles and Masks
     path = TRAIN_PATH + "img/"
     path_mask = TRAIN_PATH + "mask/"
+    path_bud_info = TRAIN_PATH + 'Bud_Info/'
     
     print(f'[DEBUG][get_data] Getting and Resizing({IMG_WIDTH}x{IMG_HEIGHT}) Train Images and Masks... ')
 
@@ -73,12 +76,18 @@ def get_data(configurations):
     print(f'[DEBUG][get_data] Number of Image Tiles: {len(files_orj)}\t Number of Image Masks: {len(files_mask)}')
 
     for i, f in enumerate(files_orj):
+        # Apply Bud Threshold 
+        if filter_tbud_count(path_bud_info, f, configurations.thold_tbud) == 0:
+            continue
         img = cv2.imread(path + f)
         img = cv2.resize(img, (IMG_HEIGHT, IMG_WIDTH), interpolation=cv2.INTER_AREA)
         img = img / 255
         X_train[i] = img
 
     for i, fm in enumerate(files_mask):
+        # Apply Bud Threshold 
+        if filter_tbud_count(path_bud_info, fm, configurations.thold_tbud) == 0:
+            continue
         img_mask = cv2.imread(path_mask + fm, cv2.IMREAD_GRAYSCALE)
         img_mask = cv2.resize(img_mask, (IMG_HEIGHT, IMG_WIDTH), interpolation=cv2.INTER_AREA)
         img_mask = img_mask / 255
