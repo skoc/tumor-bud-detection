@@ -1,7 +1,27 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from glob import glob
 import os
 import cv2
+
+def filter_tbud_count(path_bud_info, img_file, thold=3):
+    '''
+    1296-10-81-b2-budInfo.txt
+    orj-1317-37-45.jpg
+    mask-1317-37-45.jpg
+    '''
+    buds = 0
+    # Parse image ID: orj-1317-37-45.jpg -> 1317-37-45
+    img_id = '-'.join((img_file.split('.')[0]).split('-')[1:])
+
+    files_filtered = [(f.split('/')[-1], (f.split('/')[-1]).split('-')[-2]) for f in glob(path_bud_info+'*.txt') if '-'.join((f.split('/')[-1]).split('-')[:-2]) == img_id]
+    
+    if files_filtered:
+        buds = int(files_filtered[0][1][1:])
+    
+    print(files_filtered)
+    # return: [('1296-10-81-b2-budInfo.txt', 'b2')]
+    return buds
 
 def read_image(file, configurations, mask=False):
 
