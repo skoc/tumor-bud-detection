@@ -1,9 +1,4 @@
-import numpy as np
-import os
-import cv2
-import matplotlib.pyplot as plt
-
-from utils import mapper_image, read_image
+from utils.utils import *
 
 def get_iou(gt, pr, n_classes, EPS=1e-12):
     
@@ -18,7 +13,42 @@ def get_iou(gt, pr, n_classes, EPS=1e-12):
 
     return class_wise
 
-def generate_visuals(dir_img, dir_pred, img_count=1, clean=True):
+def write_iou_per_bud(img_write, img_ground, img_pred, thold_area=100):
+    
+    # debug
+    dict_locs = list()
+    
+    conts_ground, hierachy = cv2.findContours(img_ground, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    
+    for j, cont in enumerate(conts_ground):
+
+        x,y,w,h = cv2.boundingRect(cont)
+
+        if w*h > thold_area:
+            
+            # Bud
+            bud_crop_ground = img_ground[y:y+h, x:x+w]
+            bud_crop_pred = img_pred[y:y+h, x:x+w]
+            
+            # Calculate IoU
+            score_iou = get_iou(bud_crop_ground, bud_crop_pred, n_classes=1)[0]
+            # font
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            # fontScale
+            fontScale = 1
+            # Blue color in BGR
+            color = (0, 0, 255)
+            # Line thickness of 2 px
+            thickness = 2
+
+            # Using cv2.putText() method
+            image = cv2.putText(img_write, ""+str(round(score_iou,2)), (x,y), font, 
+                               fontScale, color, thickness, cv2.LINE_AA)
+            dict_locs.append(score_iou)
+    
+    return dict_locs
+
+def generate_visuals(dir_img, dir_pred, img_count=1, clean=True, thold_iou=0.5, img_size=512):
 
     # list all files in dir
     files = [f for f in os.listdir(os.path.join(dir_img, 'img'))]
@@ -27,7 +57,7 @@ def generate_visuals(dir_img, dir_pred, img_count=1, clean=True):
     random_files = np.random.choice(files, img_count)
     
     # Write Generated Visualization
-    dir_write = 'Visualization'
+    dir_write = 'visualization'
     if not os.path.exists(dir_write):
         os.makedirs(dir_write)
     
@@ -49,8 +79,11 @@ def generate_visuals(dir_img, dir_pred, img_count=1, clean=True):
         ann_img = cv2.imread(sample_ann, cv2.IMREAD_COLOR)
         mask_img  = cv2.imread(sample_mask, cv2.IMREAD_GRAYSCALE)
         pred_img = cv2.imread(sample_pred, cv2.IMREAD_GRAYSCALE)
-        overlap_img = mapper_image(img_ann=read_image(sample_ann), img_pred=read_image(sample_pred, mask=True),\
+        overlap_img = utils.mapper_image(img_ann=utils.read_image(sample_ann), img_pred=utils.read_image(sample_pred, mask=True),\
                                   fname="overlap-"+file, output_dir='.', clean=clean)
+
+        iou_scores = write_iou_per_bud(overlap_img, utils.read_image(sample_mask, mask=True), utils.read_image(sample_pred, mask=True), thold_area=100)
+        print(f"Score: {sum([i > thold_iou for i in iou_scores])/len(iou_scores)}")
 
         # select only masked area below
         # masked = input_img.copy()
