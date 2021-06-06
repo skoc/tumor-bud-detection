@@ -31,7 +31,7 @@ def read_image(file, img_size, mask=False):
 
     if not mask:
         img = cv2.imread(file, cv2.IMREAD_COLOR)
-        img = cv2.resize(img, (IMG_HEIGHT, IMG_WIDTH), interpolation=cv2.INTER_AREA)
+        img = cv2.resize(img, (IMG_HEIGHT, IMG_WIDTH, 3), interpolation=cv2.INTER_AREA)
         return img
     else:
         img_mask = cv2.imread(file, cv2.IMREAD_GRAYSCALE)
