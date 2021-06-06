@@ -20,7 +20,7 @@ print(device_lib.list_local_devices())
 
 from utils.loss_functions import dice_coef_loss
 from utils.data_generator import data_generator
-from models.unet_models import unetModel_basic_4
+from models.unet_models import unetModel_basic_4, unetModel_residual
 from utils.configurations import Configurations
 from utils.utils import filter_tbud_count
 
@@ -133,7 +133,7 @@ def train_model(X, y, configurations):
     # earlystopper = EarlyStopping(monitor='val_loss', patience=100, verbose=1)
     
     # Initialize the model
-    model = unetModel_basic_4(IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS, lr_rate=lr_rate)
+    model = unetModel_residual(IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS, lr_rate=lr_rate)
 
     # Save the model after every epoch
     checkpointer = ModelCheckpoint(model_name + '_main_modelCheckpoint.h5', verbose=0, monitor='val_loss', \
