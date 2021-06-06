@@ -1,12 +1,12 @@
 data_folder: '/sbgenomics/project-files/DATASET_BUD/'
+model_name: 'unetbase-1024'
+conf_type: 'train'
 batch_size: 4
 epoch: 100
 model_no: 1
 gpu_no: '0'
-model_name: 'unetbase-1024'
 learning_rate: 0.001
 size_img: 1024
 scale_factor: 1
-dir_write: 'outputs/training'
 thold_tbud: 3
-conf_type: 'train'
+dir_write: 'outputs/training'
