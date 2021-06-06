@@ -179,7 +179,7 @@ def main():
     print(''.join("%s:\t%s\n" % item for item in vars(configurations).items()))
     
     # Name model with configuration parameters
-    naming_config = '_'.join(list([key + "-" + str(val) for key,val in configurations.items()])[1:]) 
+    naming_config = '_'.join(list([key + "-" + str(configurations[key]) for key in configurations])[1:]) 
     configurations['model_name'] = naming_config
     
     os.environ["CUDA_VISIBLE_DEVICES"] = configurations.gpu_no
