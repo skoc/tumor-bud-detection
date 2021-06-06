@@ -9,3 +9,4 @@ size_img: 512
 scale_factor: 1
 dir_write: 'outputs/training'
 thold_tbud: 3
+conf_type: 'train'
