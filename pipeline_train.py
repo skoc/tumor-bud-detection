@@ -73,7 +73,7 @@ def get_data(configurations):
     files_orj = sorted(files_orj)
     files_mask = sorted(files_mask)
 
-    print(f'[DEBUG][get_data] Number of Image Tiles: {len(files_orj)}\t Number of Image Masks: {len(files_mask)}')
+    print(f'[DEBUG][get_data] Number of Image Tiles: {len(files_orj)}\t Number of Image Masks: {len(files_mask)}\n')
 
     for i, f in enumerate(files_orj):
         # Apply Bud Threshold 
@@ -93,8 +93,10 @@ def get_data(configurations):
         img_mask = img_mask / 255
         img_mask = np.expand_dims(img_mask, axis=-1)
         Y_train[i] = img_mask
+    
+    print(f'[DEBUG][get_data] After Filter thold_tbud:{configurations.thold_tbud} Number of Image Tiles: {len(X_train)}\t Number of Image Masks: {len(Y_train)}\n')
 
-    print(f"[DEBUG][INFO] Data Matrix: {round(X_train.nbytes / (1024 * 1000.0),3)} MB")
+    print(f"[DEBUG][INFO] Data Matrix: {round(X_train.nbytes / (1024 * 1000.0),3)} MB\n")
     pixels = Y_train.flatten().reshape(train_cpt, IMG_HEIGHT*IMG_WIDTH)
     weights_train = pixels.copy()
     pixels = np.expand_dims(pixels, axis = -1)
