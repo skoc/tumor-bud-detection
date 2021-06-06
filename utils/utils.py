@@ -23,11 +23,11 @@ def filter_tbud_count(path_bud_info, img_file, thold=3):
     # return: [('1296-10-81-b2-budInfo.txt', 'b2')]
     return buds >= thold
 
-def read_image(file, configurations, mask=False):
+def read_image(file, img_size, mask=False):
 
     # Parameters
-    IMG_HEIGHT = configurations.size_img
-    IMG_WIDTH = configurations.size_img  
+    IMG_HEIGHT = img_size
+    IMG_WIDTH = img_size
 
     if not mask:
         img = cv2.imread(file, cv2.IMREAD_COLOR)
