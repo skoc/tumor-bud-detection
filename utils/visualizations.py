@@ -71,7 +71,7 @@ def generate_visuals(dir_img, dir_pred, img_count=1, clean=True, thold_iou=0.5, 
         print(sample_ann)
 
         sample_pred = os.path.join(dir_pred, 'pred-'+file)
-        print(sample_ann)
+        print(sample_pred)
 
         sample_mask = os.path.join(dir_img, 'mask', 'bw-'+file_name+'.png')
         print(sample_mask)
