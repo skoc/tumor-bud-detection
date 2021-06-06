@@ -2,7 +2,7 @@ data_folder: '/sbgenomics/project-files/DATASET_BUD/test/'
 model_name: 'test'
 sample_count: 26
 size_img: 512
-output_folder: 'output/testing'
+output_folder: 'outputs/testing'
 trained_model: 'trained_models/unetbase_main_modelCheckpoint.h5'
 conf_type: 'test'
 gpu_no: '0'
