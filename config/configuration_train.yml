@@ -3,9 +3,9 @@ batch_size: 16
 epoch: 100
 model_no: 1
 gpu_no: '0'
-model_name: 'unetbase'
+model_name: 'unetbase-1024'
 learning_rate: 0.001
-size_img: 512
+size_img: 1024
 scale_factor: 1
 dir_write: 'outputs/training'
 thold_tbud: 3
