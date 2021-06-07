@@ -33,7 +33,7 @@ np.random.seed(seed_value)
 # Get Date for Ouput File Naming
 current_time = datetime.now().strftime('%H%M_%m%d%Y')
 
-def get_data(configurations):
+def get_data(configurations, data_folder):
     
     # Write Directory
     dir_write = os.path.join(configurations.dir_write, '/Run_Train_' + configurations.model_name  + '_' + str(current_time))
@@ -50,7 +50,7 @@ def get_data(configurations):
     IMG_WIDTH = configurations.size_img
     IMG_HEIGHT = configurations.size_img
     IMG_CHANNELS = 3
-    TRAIN_PATH = configurations.data_folder
+    TRAIN_PATH = data_folder
     
     # Path of Image Tiles and Masks
     path = TRAIN_PATH + "img/"
@@ -174,9 +174,21 @@ def save_model(model, configurations):
 
 
 def main():
+
+    # Parse command line arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--data_folder', help="Data from the Platform", required=True)
+    parser.add_argument('--config_file', help="Parameters of the model", required=True)
+
+    args = parser.parse_args()
+
+    # Parameters
+    data_folder = args.data_folder
+    config_file = args.config_file
+
     # Configurations
-    SETUP_PATH = 'config/configuration_train.yml'
-    configurations = Configurations(SETUP_PATH)
+    # SETUP_PATH = 'config/configuration_train.yml'
+    configurations = Configurations(config_file)
     print(''.join("%s:\t%s\n" % item for item in vars(configurations).items()))
     
     # Name model with configuration parameters
@@ -186,7 +198,7 @@ def main():
     os.environ["CUDA_VISIBLE_DEVICES"] = configurations.gpu_no
 
     # Data
-    X_train, y_train= get_data(configurations)
+    X_train, y_train= get_data(configurations, data_folder)
 
     # Training
     model, history = train_model(X=X_train, y=y_train, configurations=configurations)

@@ -9,7 +9,7 @@ class Configurations:
 
         if parameters_dict["conf_type"] == 'train':
 
-            self.data_folder = parameters_dict["data_folder"]
+            # self.data_folder = parameters_dict["data_folder"]
             self.batch_size = parameters_dict["batch_size"]
             self.epoch = parameters_dict["epoch"]
             self.model_no = parameters_dict["model_no"]
