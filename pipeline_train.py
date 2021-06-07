@@ -53,6 +53,7 @@ def get_data(configurations, data_folder):
     TRAIN_PATH = data_folder
     
     # Path of Image Tiles and Masks
+    print(data_folder)
     path = TRAIN_PATH + "img/"
     path_mask = TRAIN_PATH + "mask/"
     path_bud_info = TRAIN_PATH + 'Bud_Info/'
