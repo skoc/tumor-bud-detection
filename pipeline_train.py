@@ -54,9 +54,9 @@ def get_data(configurations, data_folder):
     
     # Path of Image Tiles and Masks
     print(data_folder)
-    path = TRAIN_PATH + "img/"
-    path_mask = TRAIN_PATH + "mask/"
-    path_bud_info = TRAIN_PATH + 'Bud_Info/'
+    path = os.path.join(TRAIN_PATH, "img") 
+    path_mask = os.path.join(TRAIN_PATH, "mask")
+    path_bud_info = os.path.join(TRAIN_PATH, "Bud_Info")
     
     print(f'[DEBUG][get_data] Getting and Resizing({IMG_WIDTH}x{IMG_HEIGHT}) Train Images and Masks... ')
 
