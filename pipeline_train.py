@@ -96,7 +96,7 @@ def get_data(configurations, data_folder):
         # # Apply Bud Threshold 
         # if not filter_tbud_count(path_bud_info, f, configurations.thold_tbud):
         #     continue
-        img = cv2.imread(path + f)
+        img = cv2.imread(os.path.join(path, f))
         img = cv2.resize(img, (IMG_HEIGHT, IMG_WIDTH), interpolation=cv2.INTER_AREA)
         img = img / 255
         X_train[i] = img
@@ -105,7 +105,7 @@ def get_data(configurations, data_folder):
         # # Apply Bud Threshold 
         # if not filter_tbud_count(path_bud_info, fm, configurations.thold_tbud):
         #     continue
-        img_mask = cv2.imread(path_mask + fm, cv2.IMREAD_GRAYSCALE)
+        img_mask = cv2.imread(os.path.join(path_mask, fm), cv2.IMREAD_GRAYSCALE)
         img_mask = cv2.resize(img_mask, (IMG_HEIGHT, IMG_WIDTH), interpolation=cv2.INTER_AREA)
         img_mask = img_mask / 255
         img_mask = np.expand_dims(img_mask, axis=-1)
