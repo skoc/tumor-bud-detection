@@ -139,7 +139,7 @@ def main():
     trained_model = args.trained_model
 
     # Configurations
-    SETUP_PATH = 'tumor_bud_detection/config/configuration_test.yml'
+    SETUP_PATH = 'tumor-bud-detection/config/configuration_test.yml'
     configurations = Configurations(SETUP_PATH)
 
     configurations['data_folder'] = data_folder
