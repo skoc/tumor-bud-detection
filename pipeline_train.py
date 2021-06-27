@@ -77,12 +77,13 @@ def get_data(configurations, data_folder):
     files_orj_filtered = []
     files_mask_filtered = []
 
-    for i, f in enumerate(files_orj):
-        # Apply Bud Threshold 
-        if filter_tbud_count(path_bud_info, f, configurations.thold_tbud):
-            train_cpt_filtered += 1
-            files_orj_filtered.append(files_orj[i])
-            files_mask_filtered.append(files_mask[i])
+    if int(configurations.thold_tbud) > 0:
+        for i, f in enumerate(files_orj):
+            # Apply Bud Threshold 
+            if filter_tbud_count(path_bud_info, f, int(configurations.thold_tbud)):
+                train_cpt_filtered += 1
+                files_orj_filtered.append(files_orj[i])
+                files_mask_filtered.append(files_mask[i])
         
     X_train = np.ndarray((train_cpt_filtered, IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS), dtype=np.float32)
     Y_train = np.ndarray((train_cpt_filtered, IMG_HEIGHT, IMG_WIDTH, 1), dtype=np.float32)  # dtype=np.bool)
