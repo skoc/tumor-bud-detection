@@ -1,9 +1,11 @@
-import numpy as np
+
 import sys
 import os
 import cv2
 import time
+import argparse
 import random as rd
+import numpy as np
 
 from tensorflow.keras.models import load_model
 from tensorflow.keras import backend as K
@@ -21,6 +23,7 @@ np.random.seed(seed_value)
 from utils.loss_functions import dice_coef_loss, dice_coef
 from utils.configurations import Configurations
 from utils.visualizations import generate_visuals
+from utils.utils import eprint
 
 def get_data_test(configurations):
     
@@ -124,10 +127,25 @@ def test_model(X, configurations):
     return output_pred
 
 def main():
+
+    # Parse command line arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--data_folder', help="Data from the Platform", required=True)
+    parser.add_argument('--trained_model', help="Trained model", required=True)
+    args = parser.parse_args()
+    
+    # Parameters
+    data_folder = args.data_folder
+    trained_model = args.config_file
+
     # Configurations
     SETUP_PATH = 'config/configuration_test.yml'
     configurations = Configurations(SETUP_PATH)
-    print(''.join("%s:\t%s\n" % item for item in vars(configurations).items()))
+
+    configurations['data_folder'] = data_folder
+    configurations['trained_model'] = trained_model
+
+    eprint(''.join("%s:\t%s\n" % item for item in vars(configurations).items()))
 
     # Data
     X_test, y_test = get_data_test(configurations)
