@@ -21,6 +21,7 @@ class Configurations:
             self.dir_write = parameters_dict["dir_write"]
             self.thold_tbud = parameters_dict["thold_tbud"]
             self.dropout_ratio = parameters_dict["dropout_ratio"]
+            self.model_string = "_".join([str(key)+"-"+str(val) for key, val in parameters_dict.items() if key not in ["data_folder", "dir_write"]])
         
         elif parameters_dict["conf_type"] == 'test':
 
@@ -31,3 +32,4 @@ class Configurations:
             self.output_folder = parameters_dict["output_folder"]
             self.trained_model = parameters_dict["trained_model"]
             self.gpu_no = parameters_dict["gpu_no"]
+            self.model_string = "_".join([str(key)+"-"+str(val) for key, val in parameters_dict.items() if key not in ["data_folder", "dir_write"]])

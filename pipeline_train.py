@@ -134,6 +134,7 @@ def train_model(X, y, configurations):
     dir_write = mkdir_if_not_exist(configurations.dir_write)
     epochs = configurations.epoch
     dropout_ratio = configurations.dropout_ratio
+    model_string = configurations.model_string
 
     # Free up RAM in case the model definition cells were run multiple times
     K.clear_session()
@@ -144,11 +145,11 @@ def train_model(X, y, configurations):
     model = unetModel_residual(IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS, dropout_ratio=dropout_ratio, lr_rate=lr_rate)
 
     # Save the model after every epoch
-    checkpointer = ModelCheckpoint(model_name + '_main_modelCheckpoint.h5', verbose=0, monitor='val_loss', \
+    checkpointer = ModelCheckpoint(dir_write + "/" + model_string + '_main_modelCheckpoint.h5', verbose=0, monitor='val_loss', \
                                    save_best_only=True, save_weights_only=False, period=1, mode='auto')
 
     # Log training
-    csv_logger = CSVLogger('{}/log_{}.training.csv'.format(dir_write, model_name))
+    csv_logger = CSVLogger('{}/log_{}.training.csv'.format(dir_write, model_string))
     # Reduce lr_rate on plateau
     reduce_lr = ReduceLROnPlateau(monitor='val_dice_coef', factor=0.5, patience=10, verbose=1, mode='max', cooldown=1, min_lr=0.000001)
     
@@ -159,23 +160,23 @@ def train_model(X, y, configurations):
     eprint("[INFO][train_model] Model Fit Done!")
 
     # Write model history to the file
-    pd.DataFrame(results.history).to_csv(dir_write + "history_" + model_name + ".csv")
+    pd.DataFrame(results.history).to_csv(dir_write + "history_" + model_string + ".csv")
     
     return model, results
 
 def save_model(model, configurations):
 
     # Parameters
-    model_name = configurations.model_name
+    model_string = configurations.model_string
     dir_write = configurations.dir_write
 
     # Serialize model to JSON
     model_json = model.to_json()
-    with open(model_name + ".json", "w") as json_file:
+    with open(os.path.join(dir_write, model_string + ".json"), "w") as json_file:
         json_file.write(model_json)
 
     # Serialize weights to H5
-    fname_saved = os.path.join(dir_write, model_name + ".h5")
+    fname_saved = os.path.join(dir_write, model_string + ".h5")
     model.save_weights(fname_saved)
     print(f"Saved model: {fname_saved} to disk")
 
