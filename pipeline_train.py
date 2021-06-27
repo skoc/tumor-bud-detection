@@ -22,7 +22,7 @@ from utils.loss_functions import dice_coef_loss
 from utils.data_generator import data_generator
 from models.unet_models import unetModel_basic_4, unetModel_residual
 from utils.configurations import Configurations
-from utils.utils import filter_tbud_count, eprint
+from utils.utils import filter_tbud_count, eprint, mkdir_if_not_exist
 
 # Set seed value for all of frameworks
 seed_value= 2021 
@@ -127,10 +127,11 @@ def train_model(X, y, configurations):
     IMG_HEIGHT = configurations.size_img
     IMG_WIDTH = configurations.size_img
     IMG_CHANNELS = 3
+    
     # Parameters - Model
     lr_rate = configurations.learning_rate
     model_name = configurations.model_name
-    dir_write = configurations.dir_write
+    dir_write = mkdir_if_not_exist(configurations.dir_write)
     epochs = configurations.epoch
     dropout_ratio = configurations.dropout_ratio
 
