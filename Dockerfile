@@ -4,6 +4,8 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get install -y curl apt-utils
 RUN apt-get update && apt-get install -y apt-transport-https
 RUN apt-get update && apt-get install -y vim make gcc wget tar unzip git
+RUN apt-get update && apt-get install -y ffmpeg libsm6 libxext6
+
 
 RUN apt-get update && apt-get install -y software-properties-common
 RUN add-apt-repository ppa:graphics-drivers/ppa
