@@ -3,6 +3,15 @@ import numpy as np
 from glob import glob
 import os
 import cv2
+import sys
+
+def eprint(args):
+    sys.stderr.write(str(args) + "\n")
+
+def mkdir_if_not_exist(inputdir):
+    if not os.path.exists(inputdir):
+        os.makedirs(inputdir)
+    return inputdir
 
 def filter_tbud_count(path_bud_info, img_file, thold=3):
     '''
@@ -46,7 +55,7 @@ def rename_orj(dir_img, id):
         name_new = 'orj-' + '-'.join([str(id)]+lst_f)
         os.rename(os.path.join(dir_img, f), os.path.join(dir_img, name_new))
 
-def make_clean(img_mask, thold_area = 1000):
+def make_clean(img_mask, thold_area = 100):
     if not img_mask is None:
         thold_area = thold_area
         img_cleaned = np.zeros_like(img_mask)
@@ -55,28 +64,26 @@ def make_clean(img_mask, thold_area = 1000):
 
         kernel = np.ones((3, 3), np.uint8)
         
-        img_mask = cv2.dilate(img_mask, kernel, iterations=1)
+        # Opening
+        # https://docs.opencv.org/master/d9/d61/tutorial_py_morphological_ops.html
         img_mask = cv2.morphologyEx(img_mask, cv2.MORPH_OPEN, kernel, iterations=1)
         
         conts_mask, hierachy = cv2.findContours(img_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        #conts_mask, hierachy = cv2.findContours(img_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        print('[make_clean] Num of contours after MORPH_OPEN: {}'.format(len(conts_mask)))
+        # print('[make_clean] Num of contours after MORPH_OPEN: {}'.format(len(conts_mask)))
 
-        
-        #conts_mask, hierachy = cv2.findContours(img_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        #print('[make_clean] Num of contours after dilate: {}'.format(len(conts_mask)))
-
+        # Area Thresholding
         for c in conts_mask:
             if cv2.contourArea(c) > thold_area:
                 cv2.drawContours(img_cleaned, [c], -1, 255, -1)
 
         conts_mask, hierachy = cv2.findContours(img_cleaned, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        #print('[make_clean] Num of contours after AREA THOLD: {}'.format(len(conts_mask)))
+        # print('[make_clean] Num of contours after AREA THOLD: {}'.format(len(conts_mask)))
+
         return img_cleaned
     else:
         print('[WARNING] check img_mask!')      
         
-def mapper_image(img_ann, img_pred, fname, output_dir='.', clean=False, thold_area=100):
+def mapper_image(img_ann, img_pred, fname, output_dir='outputs/', clean=False, thold_area=100):
     added_image = img_ann.copy()#cv2.addWeighted(img_ann, 0.7, img_pred, 0.3, 0)
     
     # makepred clean
@@ -85,6 +92,7 @@ def mapper_image(img_ann, img_pred, fname, output_dir='.', clean=False, thold_ar
         
         if clean:
             img_pred = make_clean(img_pred, thold_area)
+            # print("[mapper_image] Image cleaned!")
         conts_mask, hierachy = cv2.findContours(img_pred, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         
         for c in conts_mask:
@@ -96,6 +104,7 @@ def mapper_image(img_ann, img_pred, fname, output_dir='.', clean=False, thold_ar
     if not os.path.exists(dir_write):
         os.makedirs(dir_write)
     #print(dir_write + fname)
-    cv2.imwrite(os.path.join(dir_write, fname), added_image)
+    write_path = os.path.join(dir_write, fname)
+    cv2.imwrite(write_path, added_image)
     
-    return added_image
+    return added_image, write_path

@@ -22,7 +22,7 @@ from utils.loss_functions import dice_coef_loss
 from utils.data_generator import data_generator
 from models.unet_models import unetModel_basic_4, unetModel_residual
 from utils.configurations import Configurations
-from utils.utils import filter_tbud_count
+from utils.utils import filter_tbud_count, eprint
 
 # Set seed value for all of frameworks
 seed_value= 2021 
@@ -58,12 +58,12 @@ def get_data(configurations, data_folder):
     path_mask = os.path.join(TRAIN_PATH, "mask")
     path_bud_info = os.path.join(TRAIN_PATH, "Bud_Info")
     
-    print(f'[DEBUG][get_data] Getting and Resizing({IMG_WIDTH}x{IMG_HEIGHT}) Train Images and Masks... ')
+    eprint(f'[DEBUG][get_data] Getting and Resizing({IMG_WIDTH}x{IMG_HEIGHT}) Train Images and Masks... ')
 
     # Get and resize train images and masks
     train_cpt = int(sum([len(files) for r, d, files in os.walk(TRAIN_PATH + "img/")]))
 
-    print(f'[DEBUG][get_data] Getting and Resizing Train Images and Masks Done!\nPath to img: {path}')
+    eprint(f'[DEBUG][get_data] Getting and Resizing Train Images and Masks Done!\nPath to img: {path}')
     sys.stdout.flush()
 
     _, _, files_orj = next(os.walk(path))
@@ -71,7 +71,7 @@ def get_data(configurations, data_folder):
     files_orj = sorted(files_orj)
     files_mask = sorted(files_mask)
 
-    print(f'[DEBUG][get_data] Number of Image Tiles: {len(files_orj)}\t Number of Image Masks: {len(files_mask)}\n')
+    eprint(f'[DEBUG][get_data] Number of Image Tiles: {len(files_orj)}\t Number of Image Masks: {len(files_mask)}\n')
 
     train_cpt_filtered = 0
     files_orj_filtered = []
@@ -106,13 +106,13 @@ def get_data(configurations, data_folder):
         img_mask = np.expand_dims(img_mask, axis=-1)
         Y_train[i] = img_mask
     
-    print(f'[DEBUG][get_data] After Filter thold_tbud:{configurations.thold_tbud} Number of Image Tiles: {len(X_train)}\t Number of Image Masks: {len(Y_train)}\n')
+    eprint(f'[DEBUG][get_data] After Filter thold_tbud:{configurations.thold_tbud} Number of Image Tiles: {len(X_train)}\t Number of Image Masks: {len(Y_train)}\n')
 
-    print(f"[DEBUG][INFO] Data Matrix: {round(X_train.nbytes / (1024 * 1000.0),3)} MB\n")
+    eprint(f"[DEBUG][INFO] Data Matrix: {round(X_train.nbytes / (1024 * 1000.0),3)} MB\n")
     pixels = Y_train.flatten().reshape(train_cpt_filtered, IMG_HEIGHT*IMG_WIDTH)
     weights_train = pixels.copy()
     pixels = np.expand_dims(pixels, axis = -1)
-    print(f"Data Read is Done!")
+    eprint(f"Data Read is Done!")
 
     return X_train, pixels
 
@@ -147,10 +147,10 @@ def train_model(X, y, configurations):
     reduce_lr = ReduceLROnPlateau(monitor='val_dice_coef', factor=0.5, patience=10, verbose=1, mode='max', cooldown=1, min_lr=0.000001)
     
     # Fit model
-    print("[INFO][train_model] Model Fit...")
+    eprint("[INFO][train_model] Model Fit...")
     results = model.fit(X, y, validation_split=0.2, batch_size=configurations.batch_size, epochs=epochs,
                     callbacks=[checkpointer, csv_logger, reduce_lr], verbose=1, shuffle=True)#, sample_weight=weights_train)
-    print("[INFO][train_model] Model Fit Done!")
+    eprint("[INFO][train_model] Model Fit Done!")
 
     # Write model history to the file
     pd.DataFrame(results.history).to_csv(dir_write + "history_" + model_name + ".csv")
