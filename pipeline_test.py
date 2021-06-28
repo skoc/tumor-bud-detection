@@ -25,13 +25,13 @@ from utils.configurations import Configurations
 from utils.visualizations import generate_visuals
 from utils.utils import eprint
 
-def get_data_test(configurations):
+def get_data_test(data_folder, configurations):
     
     # Parameters
     IMG_WIDTH = configurations.size_img
     IMG_HEIGHT = configurations.size_img
     IMG_CHANNELS = 3
-    TEST_PATH = configurations.data_folder
+    TEST_PATH = data_folder
     COUNT = configurations.sample_count
     
     # Path of Image Tiles and Masks
@@ -79,12 +79,12 @@ def get_data_test(configurations):
 
     return X_test, pixels
 
-def test_model(X, configurations):
+def test_model(X, data_folder, trained_model, configurations):
 
     # Parameters
     IMG_HEIGHT = configurations.size_img
     IMG_WIDTH = configurations.size_img
-    TEST_PATH = configurations.data_folder
+    TEST_PATH = data_folder
     
     # Path of Image Tiles and Masks
     path = TEST_PATH + "img/"
@@ -93,7 +93,7 @@ def test_model(X, configurations):
     files_orj = sorted(files_orj)
 
     # Load Trained Model
-    model = load_model(configurations.trained_model, \
+    model = load_model(trained_model, \
         custom_objects={'dice_coef':dice_coef, 'dice_coef_loss':dice_coef_loss})
     
     # Predict
@@ -142,16 +142,13 @@ def main():
     SETUP_PATH = 'tumor-bud-detection/config/configuration_test.yml'
     configurations = Configurations(SETUP_PATH)
 
-    configurations['data_folder'] = data_folder
-    configurations['trained_model'] = trained_model
-
     eprint(''.join("%s:\t%s\n" % item for item in vars(configurations).items()))
 
     # Data
-    X_test, y_test = get_data_test(configurations)
+    X_test, y_test = get_data_test(data_folder, configurations)
 
     # Inference
-    predictions = test_model(X_test, configurations)
+    predictions = test_model(X_test, data_folder, trained_model, configurations)
 
     # for i in range(5):
     generate_visuals(configurations.data_folder, os.path.join(configurations.output_folder, 'Prediction/'))
