@@ -43,7 +43,7 @@ def get_data_test(data_folder, configurations):
     print(f'[DEBUG][get_data_test]  Getting and Resizing({IMG_WIDTH}x{IMG_HEIGHT}) Test Images and Masks... ')
 
     # Get and resize Test images and masks
-    test_cpt = int(sum([len(files) for r, d, files in os.walk(TEST_PATH + "img/")]))
+    test_cpt = int(sum([len(files) for r, d, files in os.walk(path)]))
     
     X_test = np.ndarray((test_cpt, IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS), dtype=np.float32)
     Y_test = np.ndarray((test_cpt, IMG_HEIGHT, IMG_WIDTH, 1), dtype=np.float32)  # dtype=np.bool)
@@ -59,13 +59,13 @@ def get_data_test(data_folder, configurations):
     print(f'[DEBUG][get_data_test] Number of Image Tiles: {len(files_orj)}\t Number of Image Masks: {len(files_mask)}')
 
     for i, f in enumerate(files_orj[:COUNT]):
-        img = cv2.imread(path + f)
+        img = os.path.join(path, f)
         img = cv2.resize(img, (IMG_HEIGHT, IMG_WIDTH), interpolation=cv2.INTER_AREA)
         img = img / 255
         X_test[i] = img
 
     for i, fm in enumerate(files_mask[:COUNT]):
-        img_mask = cv2.imread(path_mask + fm, cv2.IMREAD_GRAYSCALE)
+        img_mask = cv2.imread(os.path.join(path_mask, fm), cv2.IMREAD_GRAYSCALE)
         img_mask = cv2.resize(img_mask, (IMG_HEIGHT, IMG_WIDTH), interpolation=cv2.INTER_AREA)
         img_mask = img_mask / 255
         img_mask = np.expand_dims(img_mask, axis=-1)
