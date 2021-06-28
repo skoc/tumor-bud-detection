@@ -35,8 +35,8 @@ def get_data_test(data_folder, configurations):
     COUNT = configurations.sample_count
     
     # Path of Image Tiles and Masks
-    path = TEST_PATH + "img/"
-    path_mask = TEST_PATH + "mask/"
+    path = os.path.join(TEST_PATH, "img")
+    path_mask = os.path.join(TEST_PATH, "mask")
 
     total = int(sum([len(files) for r, d, files in os.walk(path)]))
     
@@ -87,7 +87,7 @@ def test_model(X, data_folder, trained_model, configurations):
     TEST_PATH = data_folder
     
     # Path of Image Tiles and Masks
-    path = TEST_PATH + "img/"
+    path = os.path.join(TEST_PATH, "img")
 
     _, _, files_orj = next(os.walk(path))
     files_orj = sorted(files_orj)
