@@ -23,7 +23,7 @@ np.random.seed(seed_value)
 from utils.loss_functions import dice_coef_loss, dice_coef
 from utils.configurations import Configurations
 from utils.visualizations import generate_visuals
-from utils.utils import eprint
+from utils.utils import eprint, mkdir_if_not_exist
 
 def get_data_test(data_folder, configurations):
     
@@ -109,7 +109,8 @@ def test_model(X, data_folder, trained_model, configurations):
     print("[INFO] Upsampling is done!(upsampled to ({}, {}) from ({}, {})".format(IMG_HEIGHT, IMG_WIDTH, preds_test[i].shape[0], preds_test[i].shape[1]))
 
     output_pred = os.path.join(configurations.output_folder, 'Prediction')
-    if not os.path.exists(output_pred): os.mkdir(output_pred)
+    mkdir_if_not_exist(configurations.output_folder)
+    mkdir_if_not_exist(output_pred)
     theshold_pred = 0.5
 
     for k in range(configurations.sample_count):
