@@ -1,5 +1,6 @@
 data_folder: '/sbgenomics/project-files/DATASET_BUD/'
 model_name: 'unetbase-residual-512'
+model_type: 'unet'
 conf_type: 'train'
 batch_size: 16
 epoch: 100

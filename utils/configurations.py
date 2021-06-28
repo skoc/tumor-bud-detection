@@ -15,6 +15,7 @@ class Configurations:
             self.model_no = parameters_dict["model_no"]
             self.gpu_no = parameters_dict["gpu_no"]
             self.model_name = parameters_dict["model_name"]
+            self.model_type = parameters_dict["model_type"]
             self.learning_rate = parameters_dict["learning_rate"]
             self.size_img = parameters_dict["size_img"]
             self.scale_factor = parameters_dict["scale_factor"]
