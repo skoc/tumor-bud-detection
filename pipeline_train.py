@@ -124,17 +124,17 @@ def get_data(configurations, data_folder):
 def train_model(X, y, configurations):
     
     # Parameters - IMG
-    IMG_HEIGHT = configurations.size_img
-    IMG_WIDTH = configurations.size_img
+    IMG_HEIGHT = int(configurations.size_img)
+    IMG_WIDTH = int(configurations.size_img)
     IMG_CHANNELS = 3
     
     # Parameters - Model
-    lr_rate = configurations.learning_rate
-    model_name = configurations.model_name
-    dir_write = mkdir_if_not_exist(configurations.dir_write)
-    epochs = configurations.epoch
-    dropout_ratio = configurations.dropout_ratio
-    model_string = configurations.model_string
+    lr_rate = float(configurations.learning_rate)
+    model_name = str(configurations.model_name)
+    dir_write = mkdir_if_not_exist(str(configurations.dir_write))
+    epochs = int(configurations.epoch)
+    dropout_ratio = float(configurations.dropout_ratio)
+    model_string = str(configurations.model_string)
 
     # Free up RAM in case the model definition cells were run multiple times
     K.clear_session()
