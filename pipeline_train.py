@@ -135,6 +135,7 @@ def train_model(X, y, configurations):
     epochs = int(configurations.epoch)
     dropout_ratio = float(configurations.dropout_ratio)
     model_string = str(configurations.model_string)
+    eprint(f"[INFO][train_model] {model_string}")
 
     # Free up RAM in case the model definition cells were run multiple times
     K.clear_session()
