@@ -3,6 +3,10 @@
 
 # directories
 data/
+Prediction_mapped/
+outputs/
+notebooks/
 
 # checkpoint paths
 *.svs
+.ipynb_checkpoints
