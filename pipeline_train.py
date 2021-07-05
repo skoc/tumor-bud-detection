@@ -133,9 +133,11 @@ def train_model(X, y, configurations):
     model_name = str(configurations.model_name)
     model_type = str(configurations.model_type)
     dir_write = mkdir_if_not_exist(str(configurations.dir_write))
+    activation = str(configurations.activation)
     batch_size = int(configurations.batch_size)
     epochs = int(configurations.epoch)
     dropout_ratio = float(configurations.dropout_ratio)
+    dropout_level = int(configurations.dropout_level)
     model_string = str(configurations.model_string)
     eprint(f"[INFO][train_model] {model_string}")
 
@@ -146,9 +148,11 @@ def train_model(X, y, configurations):
     
     # Initialize the model
     if model_type.lower() == 'resunet':
-        model = unetModel_residual(IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS, dropout_ratio=dropout_ratio, lr_rate=lr_rate)
+        model = unetModel_residual(IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS, dropout_ratio=dropout_ratio, \
+            lr_rate=lr_rate, activation=activation, dropout_level=dropout_level)
     else:
-        model = unetModel_basic_4(IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS, dropout_ratio=dropout_ratio, lr_rate=lr_rate)
+        model = unetModel_basic_4(IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS, dropout_ratio=dropout_ratio, \
+            lr_rate=lr_rate, activation=activation, dropout_level=dropout_level)
 
 
     # Save the model after every epoch
