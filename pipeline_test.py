@@ -140,7 +140,7 @@ def main():
     trained_model = args.trained_model
 
     # Configurations
-    SETUP_PATH = 'tumor-bud-detection/config/configuration_test.yml'
+    SETUP_PATH = 'configuration_test.yml'
     configurations = Configurations(SETUP_PATH)
 
     eprint(''.join("%s:\t%s\n" % item for item in vars(configurations).items()))
