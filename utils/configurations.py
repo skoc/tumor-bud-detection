@@ -13,6 +13,7 @@ class Configurations:
             self.batch_size = parameters_dict["batch_size"]
             self.epoch = parameters_dict["epoch"]
             self.model_no = parameters_dict["model_no"]
+            self.activation = parameters_dict["activation"]
             self.gpu_no = parameters_dict["gpu_no"]
             self.model_name = parameters_dict["model_name"]
             self.model_type = parameters_dict["model_type"]
@@ -22,6 +23,7 @@ class Configurations:
             self.dir_write = parameters_dict["dir_write"]
             self.thold_tbud = parameters_dict["thold_tbud"]
             self.dropout_ratio = parameters_dict["dropout_ratio"]
+            self.dropout_level = parameters_dict["dropout_level"]
             self.model_string = "_".join([str(key)+"-"+str(val) for key, val in parameters_dict.items() if key not in ["data_folder", "dir_write"]])
         
         elif parameters_dict["conf_type"] == 'test':
