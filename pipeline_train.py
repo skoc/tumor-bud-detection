@@ -131,6 +131,7 @@ def train_model(X, y, configurations):
     # Parameters - Model
     lr_rate = float(configurations.learning_rate)
     model_name = str(configurations.model_name)
+    model_type = str(configurations.model_type)
     dir_write = mkdir_if_not_exist(str(configurations.dir_write))
     batch_size = int(configurations.batch_size)
     epochs = int(configurations.epoch)
@@ -144,7 +145,11 @@ def train_model(X, y, configurations):
     # earlystopper = EarlyStopping(monitor='val_loss', patience=100, verbose=1)
     
     # Initialize the model
-    model = unetModel_residual(IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS, dropout_ratio=dropout_ratio, lr_rate=lr_rate)
+    if model_type.lower() == 'resunet':
+        model = unetModel_residual(IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS, dropout_ratio=dropout_ratio, lr_rate=lr_rate)
+    else:
+        model = unetModel_basic_4(IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS, dropout_ratio=dropout_ratio, lr_rate=lr_rate)
+
 
     # Save the model after every epoch
     checkpointer = ModelCheckpoint(dir_write + "/" + model_string + '_main_modelCheckpoint.h5', verbose=0, monitor='val_loss', \
