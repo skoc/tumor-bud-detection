@@ -132,6 +132,7 @@ def train_model(X, y, configurations):
     lr_rate = float(configurations.learning_rate)
     model_name = str(configurations.model_name)
     dir_write = mkdir_if_not_exist(str(configurations.dir_write))
+    batch_size = int(configurations.batch_size)
     epochs = int(configurations.epoch)
     dropout_ratio = float(configurations.dropout_ratio)
     model_string = str(configurations.model_string)
@@ -156,7 +157,7 @@ def train_model(X, y, configurations):
     
     # Fit model
     eprint("[INFO][train_model] Model Fit...")
-    results = model.fit(X, y, validation_split=0.2, batch_size=configurations.batch_size, epochs=epochs,
+    results = model.fit(X, y, validation_split=0.2, batch_size=batch_size, epochs=epochs,
                     callbacks=[checkpointer, csv_logger, reduce_lr], verbose=1, shuffle=True)#, sample_weight=weights_train)
     eprint("[INFO][train_model] Model Fit Done!")
 
