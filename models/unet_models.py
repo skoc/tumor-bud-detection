@@ -13,7 +13,7 @@ from utils.loss_functions import *
 
 
 # U-Net model Basic
-def unetModel_basic_4(input_height, input_width, nChannels, lr_rate=1e-3, dropout_ratio=0.2, activation='relu'):
+def unetModel_basic_4(input_height, input_width, nChannels, lr_rate=1e-3, dropout_ratio=0.2, activation='relu', dropout_level=0):
     inputs = Input(shape=(input_height, input_width, nChannels))
 
     conv1 = Convolution2D(16, (3, 3), activation=activation, padding='same')(inputs)
@@ -47,27 +47,27 @@ def unetModel_basic_4(input_height, input_width, nChannels, lr_rate=1e-3, dropou
 
     up1 = concatenate([UpSampling2D(size=(2, 2))(conv6), conv5], axis=3)
     conv7 = Convolution2D(256, (3, 3), activation=activation, padding='same')(up1)
-    conv7 = Dropout(dropout_ratio)(conv7)
+    conv7 = Dropout(dropout_ratio)(conv7) if dropout_level else conv7
     conv7 = Convolution2D(256, (3, 3), activation=activation, padding='same')(conv7)
 
     up2 = concatenate([UpSampling2D(size=(2, 2))(conv7), conv4], axis=3)
     conv8 = Convolution2D(128, (3, 3), activation=activation, padding='same')(up2)
-    conv8 = Dropout(dropout_ratio)(conv8)
+    conv8 = Dropout(dropout_ratio)(conv8) if dropout_level else conv8
     conv8 = Convolution2D(128, (3, 3), activation=activation, padding='same')(conv8)
 
     up3 = concatenate([UpSampling2D(size=(2, 2))(conv8), conv3], axis=3)
     conv9 = Convolution2D(64, (3, 3), activation=activation, padding='same')(up3)
-    conv9 = Dropout(dropout_ratio)(conv9)
+    conv9 = Dropout(dropout_ratio)(conv9) if dropout_level else conv9
     conv9 = Convolution2D(64, (3, 3), activation=activation, padding='same')(conv9)
 
     up4 = concatenate([UpSampling2D(size=(2, 2))(conv9), conv2], axis=3)
     conv10 = Convolution2D(32, (3, 3), activation=activation, padding='same')(up4)
-    conv10 = Dropout(dropout_ratio)(conv10)
+    conv10 = Dropout(dropout_ratio)(conv10) if dropout_level else conv10
     conv10 = Convolution2D(32, (3, 3), activation=activation, padding='same')(conv10)
 
     up5 = concatenate([UpSampling2D(size=(2, 2))(conv10), conv1], axis=3)
     conv11 = Convolution2D(16, (3, 3), activation=activation, padding='same')(up5)
-    conv11 = Dropout(dropout_ratio)(conv11)
+    conv11 = Dropout(dropout_ratio)(conv11) if dropout_level else conv11
     conv11 = Convolution2D(16, (3, 3), activation=activation, padding='same')(conv11)
 
     conv12 = Convolution2D(1, (1, 1), activation='sigmoid', name='main_output')(conv11)
@@ -82,7 +82,7 @@ def unetModel_basic_4(input_height, input_width, nChannels, lr_rate=1e-3, dropou
     return model
 
 # Res-U-Net model Basic
-def unetModel_residual(input_height, input_width, nChannels, lr_rate=1e-3, dropout_ratio=0.2, activation='relu'):
+def unetModel_residual(input_height, input_width, nChannels, lr_rate=1e-3, dropout_ratio=0.2, activation='relu', dropout_level=0):
     inputs = Input(shape=(input_height, input_width, nChannels))
     num_features = 16
 
@@ -136,7 +136,7 @@ def unetModel_residual(input_height, input_width, nChannels, lr_rate=1e-3, dropo
 
     up1 = concatenate([UpSampling2D(size=(2, 2))(conv6), conv5], axis=3)
     conv7 = Convolution2D(num_features * pow(2, 4), (3, 3), activation=activation, padding='same')(up1)
-    conv7 = Dropout(dropout_ratio)(conv7)
+    conv7 = Dropout(dropout_ratio)(conv7) if dropout_level else conv7
     conv7 = Convolution2D(num_features * pow(2, 4), (3, 3), activation=activation, padding='same')(conv7)
     # Residual Conneciton
     shortcut = Convolution2D(num_features * pow(2, 4), kernel_size=(1, 1))(up1)
@@ -144,7 +144,7 @@ def unetModel_residual(input_height, input_width, nChannels, lr_rate=1e-3, dropo
 
     up2 = concatenate([UpSampling2D(size=(2, 2))(conv7), conv4], axis=3)
     conv8 = Convolution2D(num_features * pow(2, 3), (3, 3), activation=activation, padding='same')(up2)
-    conv8 = Dropout(dropout_ratio)(conv8)
+    conv8 = Dropout(dropout_ratio)(conv8) if dropout_level else conv8
     conv8 = Convolution2D(num_features * pow(2, 3), (3, 3), activation=activation, padding='same')(conv8)
     # Residual Conneciton
     shortcut = Convolution2D(num_features * pow(2, 3), kernel_size=(1, 1))(up2)
@@ -152,7 +152,7 @@ def unetModel_residual(input_height, input_width, nChannels, lr_rate=1e-3, dropo
 
     up3 = concatenate([UpSampling2D(size=(2, 2))(conv8), conv3], axis=3)
     conv9 = Convolution2D(num_features * pow(2, 2), (3, 3), activation=activation, padding='same')(up3)
-    conv9 = Dropout(dropout_ratio)(conv9)
+    conv9 = Dropout(dropout_ratio)(conv9) if dropout_level else conv9
     conv9 = Convolution2D(num_features * pow(2, 2), (3, 3), activation=activation, padding='same')(conv9)
     # Residual Conneciton
     shortcut = Convolution2D(num_features * pow(2, 2), kernel_size=(1, 1))(up3)
@@ -160,7 +160,7 @@ def unetModel_residual(input_height, input_width, nChannels, lr_rate=1e-3, dropo
 
     up4 = concatenate([UpSampling2D(size=(2, 2))(conv9), conv2], axis=3)
     conv10 = Convolution2D(num_features * pow(2, 1), (3, 3), activation=activation, padding='same')(up4)
-    conv10 = Dropout(dropout_ratio)(conv10)
+    conv10 = Dropout(dropout_ratio)(conv10) if dropout_level else conv10
     conv10 = Convolution2D(num_features * pow(2, 1), (3, 3), activation=activation, padding='same')(conv10)
     # Residual Conneciton
     shortcut = Convolution2D(num_features * pow(2, 1), kernel_size=(1, 1))(up4)
@@ -168,7 +168,7 @@ def unetModel_residual(input_height, input_width, nChannels, lr_rate=1e-3, dropo
 
     up5 = concatenate([UpSampling2D(size=(2, 2))(conv10), conv1], axis=3)
     conv11 = Convolution2D(num_features * pow(2, 0), (3, 3), activation=activation, padding='same')(up5)
-    conv11 = Dropout(dropout_ratio)(conv11)
+    conv11 = Dropout(dropout_ratio)(conv11) if dropout_level else conv11
     conv11 = Convolution2D(num_features * pow(2, 0), (3, 3), activation=activation, padding='same')(conv11)
     # Residual Conneciton
     shortcut = Convolution2D(num_features * pow(2, 0), kernel_size=(1, 1))(up5)
