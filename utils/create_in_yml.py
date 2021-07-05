@@ -16,6 +16,9 @@ parser = argparse.ArgumentParser(
 parser.add_argument('--conf', type=int, metavar="INT",
                     help="Number of output configurations.")
 
+parser.add_argument('--yml_ext', metavar="STRING",
+                    help="Yaml output file naming extension", default="")
+
 # parser.add_argument('--data_folder', metavar="STRING", nargs='*', help="data_folder")
 
 parser.add_argument('--model_name', metavar='STRING', nargs='*',
@@ -60,7 +63,7 @@ parser.add_argument('--dir_write',  metavar="STRING", nargs='*',
                     help="dir_write", default=["outputs/training"])
 
 args = parser.parse_args()
-filtered_args = {k: v for k, v in vars(args).items() if v is not None and k != 'conf'}
+filtered_args = {k: v for k, v in vars(args).items() if v is not None and k not in ['conf', 'yml_ext']}
 
 def product_dict(**kwargs):
     keys = kwargs.keys()
@@ -98,6 +101,6 @@ while count < number_of_configurations:
     data = configurations[random_int]
     used_random.append(random_int)
     eprint(str(count+1) + ': ' + str(data))
-    with open('inputs_' + str(count) + '.yml', 'w') as outfile:
+    with open(str(args.yml_ext) +'_' + str(count) + '.yml', 'w') as outfile:
         yaml.dump(data, outfile)
     count += 1
