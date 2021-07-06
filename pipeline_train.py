@@ -164,7 +164,7 @@ def train_model(X, y, configurations):
     # Reduce lr_rate on plateau
     reduce_lr = ReduceLROnPlateau(monitor='val_dice_coef', factor=0.5, patience=10, verbose=1, mode='max', cooldown=1, min_lr=0.000001)
     # Early stopping with patience
-    earlystopping = EarlyStopping(monitor='val_dice_coef', patience=25)
+    earlystopping = EarlyStopping(monitor='val_dice_coef', patience=25, mode='max')
     
     # Fit model
     eprint("[INFO][train_model] Model Fit...")
