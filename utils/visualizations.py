@@ -13,6 +13,58 @@ def get_iou(gt, pr, n_classes, EPS=1e-12):
 
     return class_wise
 
+def my_iou(res1, res2):
+    intersection = np.logical_and(res1, res2)
+    union = np.logical_or(res1, res2)
+
+    if np.sum(union) != 0:
+        iou_score = np.sum(intersection) / np.sum(union)
+        return iou_score
+    return 0
+
+def get_tpfpfn(mask_img, pred_img, thold_area, thold_iou):
+
+    conts_ground, _ = cv2.findContours(pred_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    lst_score = []
+    for j, cont in enumerate(conts_ground):
+        x,y,w,h = cv2.boundingRect(cont)
+        if w*h > thold_area:
+            score = my_iou(pred_img[y:y+h, x:x+w], mask_img[y:y+h, x:x+w])
+            lst_score.append(score)
+
+    count_fp = len(np.array(lst_score)[np.array(lst_score) < thold_iou])
+
+    # conts_ground, _ = cv2.findContours(mask_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # lst_score = []
+    # for j, cont in enumerate(conts_ground):
+    #     x,y,w,h = cv2.boundingRect(cont)
+    #     if w*h > thold_area:
+    #         print(pred_img[y:y+h, x:x+w].shape)
+    #         score = my_iou(mask_img[y:y+h, x:x+w], pred_img[y:y+h, x:x+w])
+    #         lst_score.append(score)
+
+    count_tp = len(np.array(lst_score)[np.array(lst_score) >= thold_iou])
+    count_fn = len(np.array(lst_score)[np.array(lst_score) < thold_iou])
+
+    return (count_tp, count_fp, count_fn)
+
+def confusion_matrix(masks, preds, thold_area = 100, thold_iou = 0.5):
+    count_tp, count_fp, count_fn = 0, 0, 0
+    for mask_img, pred_img in zip(masks, preds):
+        #(count_tp, count_fp, count_fn)
+        tp_score = get_tpfpfn(mask_img, pred_img, thold_area = thold_area, thold_iou = thold_iou)
+
+        count_tp += tp_score[0]
+        count_fp += tp_score[1]
+        count_fn += tp_score[2]
+    
+    precision = count_tp/(count_tp + count_fp)
+    recall = count_tp/(count_tp + count_fn)
+    f1 = 2*(precision*recall)/(precision+recall)
+
+    return (f1, precision, recall)
+
+
 def write_iou_per_bud(img_write_path, img_ground_path, img_pred_path, thold_area, dir_write='data/', size_img=512):
     
     # debug
@@ -36,7 +88,8 @@ def write_iou_per_bud(img_write_path, img_ground_path, img_pred_path, thold_area
             bud_crop_pred = img_pred[y:y+h, x:x+w]
             
             # Calculate IoU
-            score_iou = get_iou(bud_crop_ground, bud_crop_pred, n_classes=1)[0]
+            # score_iou = get_iou(bud_crop_ground, bud_crop_pred, n_classes=1)[0]
+            score_iou = my_iou(bud_crop_ground, bud_crop_pred)
             # font
             font = cv2.FONT_HERSHEY_SIMPLEX
             # fontScale
@@ -47,15 +100,15 @@ def write_iou_per_bud(img_write_path, img_ground_path, img_pred_path, thold_area
             thickness = 1
 
             # Using cv2.putText() method
-            image = cv2.putText(img_write, ""+str(round(score_iou,2)), (x-w,y), font, 
+            img_write = cv2.putText(img_write, ""+str(round(score_iou,2)), (x-w,y), font, 
                                fontScale, color, thickness, cv2.LINE_AA)
 
             dict_locs.append(score_iou)
     # Write IoU Score Annotated Image
     write_loc = mkdir_if_not_exist(os.path.join(dir_write, 'iou-ann'))
-    cv2.imwrite(os.path.join(write_loc, 'iou-'+ img_pred_path.split('/')[-1]), image)
+    cv2.imwrite(os.path.join(write_loc, 'iou-'+ img_pred_path.split('/')[-1]), img_write)
     
-    return dict_locs, image
+    return dict_locs, img_write
 
 def generate_visuals(dir_img, dir_pred, img_count=1, clean=True, thold_iou=0.5, img_size=512, dir_write='outputs/', thold_area=0):
 
@@ -99,6 +152,9 @@ def generate_visuals(dir_img, dir_pred, img_count=1, clean=True, thold_iou=0.5, 
         _, overlap_img = write_iou_per_bud(path_overlap, sample_mask, sample_pred, thold_area)
         # iou_scores = write_iou_per_bud(overlap_img, read_image(sample_mask, img_size=img_size, mask=True), read_image(sample_pred, img_size=img_size, mask=True), thold_area=100)
         # print(f"Score: {sum([i > thold_iou for i in iou_scores])/len(iou_scores)}")
+
+        # (count_tp, count_fp, count_fn)
+        # tuple_score = get_tpfpfn(mask_img, pred_img, thold_area=100, thold_iou=0.5)
 
         # select only masked area below
         # masked = input_img.copy()
