@@ -25,7 +25,7 @@ from utils.configurations import Configurations
 from utils.visualizations import generate_visuals
 from utils.utils import eprint, mkdir_if_not_exist
 
-def get_data_test(data_folder, configurations):
+def get_data_test(data_folder, configurations, trained_model):
     
     # Parameters
     IMG_WIDTH = configurations.size_img
@@ -58,24 +58,31 @@ def get_data_test(data_folder, configurations):
 
     eprint(f'[DEBUG][get_data_test] Number of Image Tiles: {len(files_orj)}\t Number of Image Masks: {len(files_mask)}')
 
+    # for i, f in enumerate(files_orj[:COUNT]):
+    #     img = cv2.imread(os.path.join(path, f))
+    #     img = cv2.resize(img, (IMG_HEIGHT, IMG_WIDTH), interpolation=cv2.INTER_AREA)
+    #     img = img / 255
+    #     X_test[i] = img
+
+    # for i, fm in enumerate(files_mask[:COUNT]):
+    #     img_mask = cv2.imread(os.path.join(path_mask, fm), cv2.IMREAD_GRAYSCALE)
+    #     img_mask = cv2.resize(img_mask, (IMG_HEIGHT, IMG_WIDTH), interpolation=cv2.INTER_AREA)
+    #     img_mask = img_mask / 255
+    #     img_mask = np.expand_dims(img_mask, axis=-1)
+    #     Y_test[i] = img_mask
+    
     for i, f in enumerate(files_orj[:COUNT]):
         img = cv2.imread(os.path.join(path, f))
         img = cv2.resize(img, (IMG_HEIGHT, IMG_WIDTH), interpolation=cv2.INTER_AREA)
         img = img / 255
-        X_test[i] = img
 
-    for i, fm in enumerate(files_mask[:COUNT]):
-        img_mask = cv2.imread(os.path.join(path_mask, fm), cv2.IMREAD_GRAYSCALE)
-        img_mask = cv2.resize(img_mask, (IMG_HEIGHT, IMG_WIDTH), interpolation=cv2.INTER_AREA)
-        img_mask = img_mask / 255
-        img_mask = np.expand_dims(img_mask, axis=-1)
-        Y_test[i] = img_mask
+        predictions = test_model(img, data_folder, trained_model, configurations)
 
-    eprint(f'[DEBUG][get_data_test] X_test shape: {X_test.shape}\t Y_test shape: {Y_test.shape}')
+    # eprint(f'[DEBUG][get_data_test] X_test shape: {X_test.shape}\t Y_test shape: {Y_test.shape}')
 
-    pixels = Y_test.flatten().reshape(test_cpt, IMG_HEIGHT*IMG_WIDTH)
-    pixels = np.expand_dims(pixels, axis = -1)
-    eprint(f"[DEBUG][get_data_test] Data Read is Done!")
+    # pixels = Y_test.flatten().reshape(test_cpt, IMG_HEIGHT*IMG_WIDTH)
+    # pixels = np.expand_dims(pixels, axis = -1)
+    # eprint(f"[DEBUG][get_data_test] Data Read is Done!")
 
     return X_test, pixels
 
@@ -148,10 +155,10 @@ def main():
     eprint(''.join("%s:\t%s\n" % item for item in vars(configurations).items()))
 
     # Data
-    X_test, y_test = get_data_test(data_folder, configurations)
+    X_test, y_test = get_data_test(data_folder, configurations, trained_model)
 
     # Inference
-    predictions = test_model(X_test, data_folder, trained_model, configurations)
+    # predictions = test_model(X_test, data_folder, trained_model, configurations)
 
     # for i in range(5):
     generate_visuals(data_folder, os.path.join(configurations.output_folder, 'Prediction/'), thold_area=0)
