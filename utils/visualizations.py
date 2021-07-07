@@ -57,7 +57,7 @@ def write_iou_per_bud(img_write_path, img_ground_path, img_pred_path, dir_write=
     
     return dict_locs, image
 
-def generate_visuals(dir_img, dir_pred, img_count=1, clean=True, thold_iou=0.5, img_size=512, dir_write='outputs/'):
+def generate_visuals(dir_img, dir_pred, img_count=1, clean=True, thold_iou=0.5, img_size=512, dir_write='outputs/', thold_area=100):
 
     # list all files in dir
     files = [f for f in os.listdir(os.path.join(dir_img, 'img'))]
@@ -93,10 +93,10 @@ def generate_visuals(dir_img, dir_pred, img_count=1, clean=True, thold_iou=0.5, 
         mask_img  = cv2.imread(sample_mask, cv2.IMREAD_GRAYSCALE)
         pred_img = cv2.imread(sample_pred, cv2.IMREAD_GRAYSCALE)
         overlap_img, path_overlap = mapper_image(img_ann=read_image(sample_ann, img_size=img_size), img_pred=read_image(sample_pred, img_size=img_size, mask=True),\
-                                  fname="overlap-"+file, output_dir='.', clean=clean)
+                                  fname="overlap-"+file, output_dir='.', clean=clean, thold_area=thold_area)
         
         # IoU Scores
-        _, overlap_img = write_iou_per_bud(path_overlap, sample_mask, sample_pred, thold_area=100)
+        _, overlap_img = write_iou_per_bud(path_overlap, sample_mask, sample_pred, thold_area=thold_area)
         # iou_scores = write_iou_per_bud(overlap_img, read_image(sample_mask, img_size=img_size, mask=True), read_image(sample_pred, img_size=img_size, mask=True), thold_area=100)
         # print(f"Score: {sum([i > thold_iou for i in iou_scores])/len(iou_scores)}")
 

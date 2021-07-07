@@ -67,6 +67,8 @@ def make_clean(img_mask, thold_area = 100):
         # Opening
         # https://docs.opencv.org/master/d9/d61/tutorial_py_morphological_ops.html
         img_mask = cv2.morphologyEx(img_mask, cv2.MORPH_OPEN, kernel, iterations=1)
+        # Closing
+        img_mask = cv2.morphologyEx(img_mask, cv2.MORPH_CLOSE, kernel, iterations=2)
         
         conts_mask, hierachy = cv2.findContours(img_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         # print('[make_clean] Num of contours after MORPH_OPEN: {}'.format(len(conts_mask)))
@@ -96,8 +98,12 @@ def mapper_image(img_ann, img_pred, fname, output_dir='outputs/', clean=False, t
         conts_mask, hierachy = cv2.findContours(img_pred, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         
         for c in conts_mask:
+            # rect = cv2.minAreaRect(c)
+            # box = cv2.boxPoints(rect)
+            # box = np.int0(box)
+            # cv2.drawContours(added_image,[box],0,(255, 0, 0), 3)
             x,y,w,h = cv2.boundingRect(c)
-            cv2.rectangle(added_image, (x-5,y-5), (x+w+5, y+h+5), (255, 0, 0), 3)
+            cv2.rectangle(added_image, (x-5,y-5), (x+w+5, y+h+5), (255, 0, 0), 2)
     # get rectangle of it
     # draw on ann
     dir_write = os.path.join(output_dir,'Prediction_mapped')
