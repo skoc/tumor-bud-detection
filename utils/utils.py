@@ -55,7 +55,7 @@ def rename_orj(dir_img, id):
         name_new = 'orj-' + '-'.join([str(id)]+lst_f)
         os.rename(os.path.join(dir_img, f), os.path.join(dir_img, name_new))
 
-def make_clean(img_mask, thold_area = 100):
+def make_clean(img_mask, thold_area):
     if not img_mask is None:
         thold_area = thold_area
         img_cleaned = np.zeros_like(img_mask)
@@ -85,7 +85,7 @@ def make_clean(img_mask, thold_area = 100):
     else:
         print('[WARNING] check img_mask!')      
         
-def mapper_image(img_ann, img_pred, fname, output_dir='outputs/', clean=False, thold_area=100):
+def mapper_image(img_ann, img_pred, fname, thold_area, output_dir='outputs/', clean=False):
     added_image = img_ann.copy()#cv2.addWeighted(img_ann, 0.7, img_pred, 0.3, 0)
     
     # makepred clean
