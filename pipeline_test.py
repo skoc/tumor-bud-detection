@@ -97,7 +97,9 @@ def test_model(X, data_folder, trained_model, configurations):
         custom_objects={'dice_coef':dice_coef, 'dice_coef_loss':dice_coef_loss})
     
     # Predict
-    preds_test = model.predict(X)
+    preds_test = []
+    for x in X:
+        preds_test = model.predict(x)
     preds_reshaped = np.ndarray((len(preds_test), IMG_HEIGHT, IMG_WIDTH), dtype=np.float32)
     
     for i in range(len(preds_test)):
