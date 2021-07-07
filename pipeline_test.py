@@ -72,11 +72,13 @@ def get_data_test(data_folder, configurations, trained_model):
     #     Y_test[i] = img_mask
     
     for i, f in enumerate(files_orj[:COUNT]):
+        X_test = np.ndarray((1, IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS), dtype=np.float32)
+
         img = cv2.imread(os.path.join(path, f))
         img = cv2.resize(img, (IMG_HEIGHT, IMG_WIDTH), interpolation=cv2.INTER_AREA)
         img = img / 255
-
-        predictions = test_model(img, data_folder, trained_model, configurations)
+        X_test[0] = img
+        predictions = test_model(X_test, data_folder, trained_model, configurations)
 
     # eprint(f'[DEBUG][get_data_test] X_test shape: {X_test.shape}\t Y_test shape: {Y_test.shape}')
 
@@ -84,7 +86,7 @@ def get_data_test(data_folder, configurations, trained_model):
     # pixels = np.expand_dims(pixels, axis = -1)
     # eprint(f"[DEBUG][get_data_test] Data Read is Done!")
 
-    return X_test, pixels
+    # return X_test, pixels
 
 def test_model(X, data_folder, trained_model, configurations):
 
@@ -155,7 +157,7 @@ def main():
     eprint(''.join("%s:\t%s\n" % item for item in vars(configurations).items()))
 
     # Data
-    X_test, y_test = get_data_test(data_folder, configurations, trained_model)
+    get_data_test(data_folder, configurations, trained_model)
 
     # Inference
     # predictions = test_model(X_test, data_folder, trained_model, configurations)
