@@ -45,8 +45,8 @@ def get_data_test(data_folder, configurations, trained_model):
     # Get and resize Test images and masks
     test_cpt = int(sum([len(files) for r, d, files in os.walk(path)]))
     
-    X_test = np.ndarray((test_cpt, IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS), dtype=np.float32)
-    Y_test = np.ndarray((test_cpt, IMG_HEIGHT, IMG_WIDTH, 1), dtype=np.float32)  # dtype=np.bool)
+    # X_test = np.ndarray((test_cpt, IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS), dtype=np.float32)
+    # Y_test = np.ndarray((test_cpt, IMG_HEIGHT, IMG_WIDTH, 1), dtype=np.float32)  # dtype=np.bool)
 
     eprint(f'[DEBUG][get_data_test] Getting and Resizing Test Images and Masks Done!\nPath to img: {path}')
     sys.stdout.flush()
@@ -106,9 +106,7 @@ def test_model(X, data_folder, trained_model, configurations):
         custom_objects={'dice_coef':dice_coef, 'dice_coef_loss':dice_coef_loss})
     
     # Predict
-    preds_test = []
-    for x in X:
-        preds_test = model.predict(x)
+    preds_test = model.predict(X)
     preds_reshaped = np.ndarray((len(preds_test), IMG_HEIGHT, IMG_WIDTH), dtype=np.float32)
     
     for i in range(len(preds_test)):
