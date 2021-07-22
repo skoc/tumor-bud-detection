@@ -190,7 +190,7 @@ def main():
     # predictions = test_model(X_test, data_folder, trained_model, configurations)
 
     # for i in range(5):
-    # generate_visuals(data_folder, os.path.join(configurations.output_folder, 'Prediction/'), thold_area=0)
+    generate_visuals(data_folder, os.path.join(configurations.output_folder, 'Prediction/'), thold_area=0)
     # time.sleep(3)
 
 if __name__ == "__main__":
