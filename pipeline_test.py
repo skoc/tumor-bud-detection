@@ -70,15 +70,44 @@ def get_data_test(data_folder, configurations, trained_model):
     #     img_mask = img_mask / 255
     #     img_mask = np.expand_dims(img_mask, axis=-1)
     #     Y_test[i] = img_mask
+        # Load Trained Model
+    model = load_model(trained_model, custom_objects={'dice_coef':dice_coef, 'dice_coef_loss':dice_coef_loss})
     
-    for i, f in enumerate(files_orj[:COUNT]):
+    for i, f in enumerate(files_orj):
         X_test = np.ndarray((1, IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS), dtype=np.float32)
 
         img = cv2.imread(os.path.join(path, f))
         img = cv2.resize(img, (IMG_HEIGHT, IMG_WIDTH), interpolation=cv2.INTER_AREA)
         img = img / 255
         X_test[0] = img
-        predictions = test_model(X_test, data_folder, trained_model, configurations)
+        # predictions = test_model(X_test, data_folder, trained_model, configurations)
+            # Predict
+        preds_test = model.predict(X_test)
+        preds_reshaped = np.ndarray((1, IMG_HEIGHT, IMG_WIDTH), dtype=np.float32)
+        preds_reshaped[0] = preds_test[0].reshape(IMG_HEIGHT, IMG_WIDTH)
+
+        preds_upsampled = [np.expand_dims(cv2.resize(preds_reshaped[0], (IMG_HEIGHT, IMG_WIDTH)), axis=-1)]
+        print("[INFO] Upsampling is done!(upsampled to ({}, {}) from ({}, {})".format(IMG_HEIGHT, IMG_WIDTH, preds_test[0].shape[0], preds_test[0].shape[1]))
+
+        output_pred = os.path.join(configurations.output_folder, 'Prediction')
+        mkdir_if_not_exist(configurations.output_folder)
+        mkdir_if_not_exist(output_pred)
+        theshold_pred = 0.5
+
+        img = preds_upsampled[0].copy()
+
+        img_raw = img * 255
+        out_name_raw = os.path.join(output_pred, "pred-raw-" + files_orj[i])
+        cv2.imwrite(out_name_raw, img_raw)
+
+        img[ img > theshold_pred] = 1
+        img[ img <= theshold_pred] = 0
+        img *= 255
+        
+        out_name = os.path.join(output_pred, "pred-" + files_orj[i])
+        cv2.imwrite(out_name, img)
+            
+        print('[INFO] Finished Prediction!')
 
     # eprint(f'[DEBUG][get_data_test] X_test shape: {X_test.shape}\t Y_test shape: {Y_test.shape}')
 
@@ -122,7 +151,7 @@ def test_model(X, data_folder, trained_model, configurations):
     mkdir_if_not_exist(output_pred)
     theshold_pred = 0.5
 
-    for k in range(configurations.sample_count):
+    for k in range(len(preds_test)):
         img = preds_upsampled[k].copy()
 
         img[ img > theshold_pred] = 1
@@ -161,7 +190,7 @@ def main():
     # predictions = test_model(X_test, data_folder, trained_model, configurations)
 
     # for i in range(5):
-    generate_visuals(data_folder, os.path.join(configurations.output_folder, 'Prediction/'), thold_area=0)
+    # generate_visuals(data_folder, os.path.join(configurations.output_folder, 'Prediction/'), thold_area=0)
     # time.sleep(3)
 
 if __name__ == "__main__":
