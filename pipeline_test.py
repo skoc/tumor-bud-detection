@@ -36,14 +36,14 @@ def get_data_test(data_folder, configurations, trained_model):
     
     # Path of Image Tiles and Masks
     path = os.path.join(TEST_PATH, "img")
-    path_mask = os.path.join(TEST_PATH, "mask")
+    # path_mask = os.path.join(TEST_PATH, "mask")
 
-    total = int(sum([len(files) for r, d, files in os.walk(path)]))
+    # total = int(sum([len(files) for r, d, files in os.walk(path)]))
     
     eprint(f'[DEBUG][get_data_test]  Getting and Resizing({IMG_WIDTH}x{IMG_HEIGHT}) Test Images and Masks... ')
 
     # Get and resize Test images and masks
-    test_cpt = int(sum([len(files) for r, d, files in os.walk(path)]))
+    # test_cpt = int(sum([len(files) for r, d, files in os.walk(path)]))
     
     # X_test = np.ndarray((test_cpt, IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS), dtype=np.float32)
     # Y_test = np.ndarray((test_cpt, IMG_HEIGHT, IMG_WIDTH, 1), dtype=np.float32)  # dtype=np.bool)
@@ -52,11 +52,11 @@ def get_data_test(data_folder, configurations, trained_model):
     sys.stdout.flush()
 
     _, _, files_orj = next(os.walk(path))
-    _, _, files_mask = next(os.walk(path_mask))
+    # _, _, files_mask = next(os.walk(path_mask))
     files_orj = sorted(files_orj)
-    files_mask = sorted(files_mask)
+    # files_mask = sorted(files_mask)
 
-    eprint(f'[DEBUG][get_data_test] Number of Image Tiles: {len(files_orj)}\t Number of Image Masks: {len(files_mask)}')
+    eprint(f'[DEBUG][get_data_test] Number of Image Tiles: {len(files_orj)}')
 
     # for i, f in enumerate(files_orj[:COUNT]):
     #     img = cv2.imread(os.path.join(path, f))
