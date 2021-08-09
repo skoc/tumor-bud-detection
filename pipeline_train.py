@@ -162,14 +162,14 @@ def train_model(X, y, configurations):
     # Log training
     csv_logger = CSVLogger('{}/log_{}.training.csv'.format(dir_write, model_string))
     # Reduce lr_rate on plateau
-    reduce_lr = ReduceLROnPlateau(monitor='val_dice_coef', factor=0.5, patience=10, verbose=1, mode='max', cooldown=1, min_lr=0.000001)
+    reduce_lr = ReduceLROnPlateau(monitor='val_dice_coef', factor=0.5, patience=10, verbose=0, mode='max', cooldown=1, min_lr=0.000001)
     # Early stopping with patience
     earlystopping = EarlyStopping(monitor='val_dice_coef', patience=25, mode='max')
     
     # Fit model
     eprint("[INFO][train_model] Model Fit...")
     results = model.fit(X, y, validation_split=0.2, batch_size=batch_size, epochs=epochs,
-                    callbacks=[checkpointer, csv_logger, reduce_lr, earlystopping], verbose=1, shuffle=True)#, sample_weight=weights_train)
+                    callbacks=[checkpointer, csv_logger, reduce_lr, earlystopping], verbose=2, shuffle=True)#, sample_weight=weights_train)
     eprint("[INFO][train_model] Model Fit Done!")
 
     # Write model history to the file
