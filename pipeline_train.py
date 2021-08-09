@@ -169,7 +169,7 @@ def train_model(X, y, configurations):
     # Fit model
     eprint("[INFO][train_model] Model Fit...")
     results = model.fit(X, y, validation_split=0.2, batch_size=batch_size, epochs=epochs,
-                    callbacks=[checkpointer, csv_logger, reduce_lr, earlystopping], verbose=2, shuffle=True)#, sample_weight=weights_train)
+                    callbacks=[checkpointer, csv_logger, reduce_lr, earlystopping], verbose=1, shuffle=True)#, sample_weight=weights_train)
     eprint("[INFO][train_model] Model Fit Done!")
 
     # Write model history to the file
